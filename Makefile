@@ -1,6 +1,6 @@
 GNAT    := gnatmake
-SPARK   := spark
-FLAGS   := -gnatwa -gnat2022 -gnata -gnat05 -gnatY
+SPARK   := gnatprove
+FLAGS   := -gnatwa -gnat2022 -gnata -gnat05
 OBJ_DIR := obj
 BIN_DIR := bin
 
@@ -14,7 +14,7 @@ $(BIN_DIR)/tests: *.ads *.adb *.gpr
 
 prove: *.ads *.adb *.gpr
 	mkdir -p $(OBJ_DIR)
-	$(SPARK) prove -Plemke_howson.gpr --level=4
+	$(SPARK) -Plemke_howson.gpr --level=4
 
 test: all
 	@echo "Running tests..."
