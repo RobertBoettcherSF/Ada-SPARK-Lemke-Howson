@@ -13,9 +13,7 @@ project Lemke_Howson is
          "-gnat2022",
          "-gnatwa",
          "-gnata",
-         "-gnat05",
-         "-gnatY",
-         "-spark"
+         "-gnat05"
       );
    end Compiler;
 end Lemke_Howson;
