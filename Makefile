@@ -1,6 +1,6 @@
 GNAT    := gnatmake
 SPARK   := gnatprove
-FLAGS   := -gnatwa -gnat2022 -gnata -gnat05
+FLAGS   := -gnatwa -gnat2022 -gnata
 OBJ_DIR := obj
 BIN_DIR := bin
 
