@@ -91,8 +91,8 @@ begin
    Check_Real ("8.3 Valid strategy returned", (if Eq2.P1_Strategy (1) >= 0.0 then 1.0 else 0.0), 1.0);
 
    Put_Line ("TEST 9 — 1x1 Degenerate / Smallest Game");
-   A1 := [[1 => [1 => 10.0]]];
-   B1 := [[1 => [1 => 5.0]]];
+   A1 := [[10.0]];
+   B1 := [[5.0]];
    Eq1 := Find_Equilibrium (A1, B1, 1, 1, Initial_Drop => 1);
    Check_Real ("9.1 1x1 P1 Strat 1", Eq1.P1_Strategy (1), 1.0);
    Check_Real ("9.2 1x1 P2 Strat 1", Eq1.P2_Strategy (1), 1.0);
