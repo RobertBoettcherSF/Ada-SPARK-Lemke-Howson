@@ -96,7 +96,12 @@ begin
    Eq1 := Find_Equilibrium (A1, B1, 1, 1, Initial_Drop => 1);
    Check_Real ("9.1 1x1 P1 Strat 1", Eq1.P1_Strategy (1), 1.0);
    Check_Real ("9.2 1x1 P2 Strat 1", Eq1.P2_Strategy (1), 1.0);
+   
+   pragma Warnings (Off, "condition can only be False if invalid values present");
+   pragma Warnings (Off, "condition is always True");
    Check ("9.3 1x1 Dimensions Correct", Eq1.M = 1 and Eq1.N = 1);
+   pragma Warnings (On, "condition is always True");
+   pragma Warnings (On, "condition can only be False if invalid values present");
 
    Put_Line ("TEST 10 — Rock Paper Scissors (3x3 Mixed Equilibrium)");
    A3 := ((0.0, -1.0, 1.0), (1.0, 0.0, -1.0), (-1.0, 1.0, 0.0));
@@ -126,7 +131,12 @@ begin
    Eq2x3 := Find_Equilibrium (A2x3, B2x3, 2, 3, Initial_Drop => 1);
    Check_Real ("13.1 Asym P1 S1", Eq2x3.P1_Strategy (1) + Eq2x3.P1_Strategy (2), 1.0);
    Check_Real ("13.2 Asym P2 S1", Eq2x3.P2_Strategy (1) + Eq2x3.P2_Strategy (2) + Eq2x3.P2_Strategy (3), 1.0);
+   
+   pragma Warnings (Off, "condition can only be False if invalid values present");
+   pragma Warnings (Off, "condition is always True");
    Check ("13.3 Asym dimensions preserved", Eq2x3.M = 2 and Eq2x3.N = 3);
+   pragma Warnings (On, "condition is always True");
+   pragma Warnings (On, "condition can only be False if invalid values present");
 
    Put_Line ("");
    Put_Line ("=== " & Natural'Image (Pass_Count) & " passed, " & Natural'Image (Fail_Count) & " failed ===");
