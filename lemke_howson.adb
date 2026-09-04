@@ -87,7 +87,7 @@ package body Lemke_Howson with SPARK_Mode => On is
       declare
          R : constant Max_Dim_Type := Best_Row;
          Pivot_Val : constant Real := T.Mat (R, C);
-         New_Row_Mat : Tableau_Vector := (others => 0.0);
+         New_Row_Mat : Tableau_Vector := [others => 0.0];
          New_Row_RHS : Real;
       begin
          --  Swap labels
@@ -164,10 +164,10 @@ package body Lemke_Howson with SPARK_Mode => On is
       --  3. Initialize Tableau 1 (Polytope 1: Ay <= 1)
       T1.Rows := M;
       T1.Cols := N;
-      T1.Mat := (others => (others => 0.0));
-      T1.RHS := (others => 1.0);
-      T1.Basic := (others => 1);
-      T1.Non_Basic := (others => 1);
+      T1.Mat := [others => [others => 0.0]];
+      T1.RHS := [others => 1.0];
+      T1.Basic := [others => 1];
+      T1.Non_Basic := [others => 1];
 
       for I in 1 .. M loop
          for J in 1 .. N loop
@@ -182,10 +182,10 @@ package body Lemke_Howson with SPARK_Mode => On is
       --  4. Initialize Tableau 2 (Polytope 2: B^T x <= 1)
       T2.Rows := N;
       T2.Cols := M;
-      T2.Mat := (others => (others => 0.0));
-      T2.RHS := (others => 1.0);
-      T2.Basic := (others => 1);
-      T2.Non_Basic := (others => 1);
+      T2.Mat := [others => [others => 0.0]];
+      T2.RHS := [others => 1.0];
+      T2.Basic := [others => 1];
+      T2.Non_Basic := [others => 1];
 
       for I in 1 .. N loop
          for J in 1 .. M loop
@@ -200,26 +200,29 @@ package body Lemke_Howson with SPARK_Mode => On is
 
       --  5. Primary Pivot Loop
       Current_Enter := Initial_Drop;
-      for Iter in 1 .. 10_000 loop
-         if In_Non_Basic (T1, Current_Enter) then
-            Pivot (T1, Current_Enter, Next_Enter);
-         elsif In_Non_Basic (T2, Current_Enter) then
-            Pivot (T2, Current_Enter, Next_Enter);
-         else
-            --  Mathematical safeguard/fallback, should never occur
-            Next_Enter := Initial_Drop;
-         end if;
+      declare
+         Pivot_In_T1 : Boolean := In_Non_Basic (T1, Current_Enter);
+      begin
+         for Iter in 1 .. 10_000 loop
+            if Pivot_In_T1 then
+               Pivot (T1, Current_Enter, Next_Enter);
+               Pivot_In_T1 := False;
+            else
+               Pivot (T2, Current_Enter, Next_Enter);
+               Pivot_In_T1 := True;
+            end if;
 
-         --  If the dropped label is recovered, the equilibrium is found
-         if Next_Enter = Initial_Drop then
-            exit;
-         end if;
-         Current_Enter := Next_Enter;
-      end loop;
+            --  If the dropped label is recovered, the equilibrium is found
+            if Next_Enter = Initial_Drop then
+               exit;
+            end if;
+            Current_Enter := Next_Enter;
+         end loop;
+      end;
 
       --  6. Extract Strategy Probabilities
-      Result.P1_Strategy := (others => 0.0);
-      Result.P2_Strategy := (others => 0.0);
+      Result.P1_Strategy := [others => 0.0];
+      Result.P2_Strategy := [others => 0.0];
 
       for I in 1 .. T1.Rows loop
          if T1.Basic (I) > M and then T1.Basic (I) <= M + N then
